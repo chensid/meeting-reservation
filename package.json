@@ -1,0 +1,17 @@
+{
+  "name": "meeting-reservation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend start:dev",
+    "dev": "concurrently --names \"frontend,backend\" --prefix \"name\" \"pnpm dev:frontend\" \"pnpm dev:backend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
