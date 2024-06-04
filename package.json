@@ -6,12 +6,9 @@
   "scripts": {
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter backend start:dev",
-    "dev": "concurrently --names \"frontend,backend\" --prefix \"name\" \"pnpm dev:frontend\" \"pnpm dev:backend\""
+    "dev": "pnpm --parallel dev"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "concurrently": "^8.2.2"
-  }
+  "license": "ISC"
 }

@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id           Int      @id @default(autoincrement())
+  username     String   @db.VarChar(50)
+  password     String   @db.VarChar(50)
+  nick_name    String   @db.VarChar(50)
+  email        String   @db.VarChar(50)
+  head_pic     String   @db.VarChar(100)
+  phone_number String   @db.VarChar(20)
+  is_frozen    Boolean
+  is_admin     Boolean
+  create_time  DateTime @default(now())
+  update_time  DateTime @updatedAt
+}
+
+model roles {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(20)
+}
+
+model permissions {
+  id          Int    @id @default(autoincrement())
+  code        String @db.VarChar(20)
+  description String @db.VarChar(100)
+}
+
+model user_roles {
+  id      Int @id @default(autoincrement())
+  user_id Int
+  role_id Int
+}
+
+model role_permissions {
+  id         Int @id @default(autoincrement())
+  role_id    Int
+  permission Int
+}
+
+model meeting_rooms {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(50)
+  capacity    Int
+  location    String   @db.VarChar(50)
+  equipment   String   @db.VarChar(50)
+  description String   @db.VarChar(100)
+  is_booked   Boolean
+  create_time DateTime @default(now())
+  update_time DateTime @updatedAt
+}
+
+model bookings {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  room_id     Int
+  start_time  DateTime
+  end_time    DateTime
+  status      String   @db.VarChar(20)
+  note        String   @db.VarChar(100)
+  create_time DateTime @default(now())
+  update_time DateTime @updatedAt
+}
+
+model booking_attendees {
+  id         Int @id @default(autoincrement())
+  user_id    Int
+  booking_id Int
+}
