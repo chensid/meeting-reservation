@@ -10,7 +10,7 @@ export class UserEntity implements users {
   username: string;
 
   @ApiProperty({ description: '昵称' })
-  nick_name: string;
+  nickName: string;
 
   @Exclude()
   password: string;
@@ -19,20 +19,24 @@ export class UserEntity implements users {
   email: string;
 
   @ApiProperty()
-  head_pic: string;
+  headPic: string;
 
   @ApiProperty({ description: '电话' })
-  phone_number: string;
+  phoneNumber: string;
 
   @Exclude()
-  is_frozen: boolean;
+  isFrozen: boolean;
 
   @Exclude()
-  is_admin: boolean;
+  isAdmin: boolean;
 
   @ApiProperty({ description: '创建时间' })
-  create_time: Date;
+  createTime: Date;
 
   @ApiProperty({ description: '更新时间' })
-  update_time: Date;
+  updateTime: Date;
+
+  constructor(partial: Partial<UserEntity>) {
+    Object.assign(this, partial);
+  }
 }

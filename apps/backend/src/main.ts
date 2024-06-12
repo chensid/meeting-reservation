@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ResponseInterceptor } from './common/interceptors/response/response.interceptor';
+import { HttpErrorFilter } from './common/filters/http-error/http-error.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,6 +25,12 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  // 配置全局过滤器
+  app.useGlobalFilters(new HttpErrorFilter());
+
+  // 配置全局拦截器
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   await app.listen(3000);
 }
