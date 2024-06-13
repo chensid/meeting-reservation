@@ -32,8 +32,6 @@ export class UserController {
 
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
-
     const captcha = await this.cacheManager.get(
       `captcha_${createUserDto.email}`,
     );

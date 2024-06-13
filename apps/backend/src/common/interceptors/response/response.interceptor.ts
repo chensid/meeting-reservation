@@ -11,7 +11,6 @@ import { map, Observable } from 'rxjs';
 export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const response = context.switchToHttp().getResponse<Response>();
-    console.log(response.statusCode);
     return next.handle().pipe(
       map((data) => {
         return {

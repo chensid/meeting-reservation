@@ -48,8 +48,9 @@ export class UserService {
     return plainToClass(UserEntity, userList);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const user = await this.prismaService.users.findUnique({ where: { id } });
+    return plainToClass(UserEntity, user);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
