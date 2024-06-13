@@ -7,8 +7,9 @@ import { redisStore } from 'cache-manager-ioredis-yet';
 import type { RedisOptions } from 'ioredis';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheInterceptor } from '@nestjs/cache-manager';
-import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 import { CryptoModule } from './crypto/crypto.module';
 import { EmailModule } from './email/email.module';
 
@@ -28,8 +29,9 @@ import { EmailModule } from './email/email.module';
       }),
       inject: [ConfigService],
     }),
-    UserModule,
     PrismaModule,
+    AuthModule,
+    UserModule,
     CryptoModule,
     EmailModule,
   ],

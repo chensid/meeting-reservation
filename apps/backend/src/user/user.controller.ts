@@ -14,15 +14,14 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { EmailService } from '../email/email.service';
 
-@Controller('user')
 @ApiTags('user')
+@Controller('user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -60,11 +59,6 @@ export class UserController {
       html: `<p>你的注册验证码是 ${code}</p>`,
     });
     return '发送成功';
-  }
-
-  @Post('login')
-  login(@Body() loginUserDto: LoginUserDto) {
-    return this.userService.login(loginUserDto);
   }
 
   @Get()

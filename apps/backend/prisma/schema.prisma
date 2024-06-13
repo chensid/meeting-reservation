@@ -7,12 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model User {
   id          Int      @id @default(autoincrement())
-  username    String   @db.VarChar(50)
+  username    String   @unique @db.VarChar(50)
   password    String   @db.VarChar(100)
   nickName    String   @map("nick_name") @db.VarChar(50)
-  email       String   @db.VarChar(50)
+  email       String   @unique @db.VarChar(50)
   headPic     String?  @map("head_pic") @db.VarChar(100)
   phoneNumber String?  @map("phone_number") @db.VarChar(20)
   isFrozen    Boolean  @default(false) @map("is_frozen")
@@ -21,30 +21,30 @@ model users {
   updateTime  DateTime @updatedAt @map("update_time")
 }
 
-model roles {
+model Role {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(20)
 }
 
-model permissions {
+model Permission {
   id          Int    @id @default(autoincrement())
   code        String @db.VarChar(20)
   description String @db.VarChar(100)
 }
 
-model user_roles {
+model UserRole {
   id     Int @id @default(autoincrement())
   userId Int @map("user_id")
   roleId Int @map("role_id")
 }
 
-model role_permissions {
+model RolePermission {
   id         Int @id @default(autoincrement())
   roleId     Int @map("role_id")
   permission Int
 }
 
-model meeting_rooms {
+model MeetingRoom {
   id          Int      @id @default(autoincrement())
   name        String   @db.VarChar(50)
   capacity    Int
@@ -52,11 +52,11 @@ model meeting_rooms {
   equipment   String   @db.VarChar(50)
   description String   @db.VarChar(100)
   isBooked    Boolean  @default(false) @map("is_booked")
-  create_time DateTime @default(now())
-  update_time DateTime @updatedAt
+  createTime  DateTime @default(now()) @map("create_time")
+  updateTime  DateTime @updatedAt @map("update_time")
 }
 
-model bookings {
+model Booking {
   id         Int      @id @default(autoincrement())
   userId     Int      @map("user_id")
   roomId     Int      @map("room_id")
@@ -68,7 +68,7 @@ model bookings {
   updateTime DateTime @updatedAt @map("update_time")
 }
 
-model booking_attendees {
+model BookingAttendee {
   id        Int @id @default(autoincrement())
   userId    Int @map("user_id")
   bookingId Int @map("booking_id")

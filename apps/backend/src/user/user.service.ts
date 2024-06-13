@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CryptoService } from '../crypto/crypto.service';
 import { plainToClass } from 'class-transformer';
@@ -16,7 +15,7 @@ export class UserService {
 
   register(createUserDto: CreateUserDto) {
     const { username, nickName, password, email } = createUserDto;
-    return this.prismaService.users.create({
+    return this.prismaService.user.create({
       data: {
         username,
         nickName,
@@ -26,30 +25,19 @@ export class UserService {
     });
   }
 
-  async login(loginUserDto: LoginUserDto) {
-    const { username, password } = loginUserDto;
-    const user = await this.prismaService.users.findFirst({
-      where: {
-        username,
-        password: this.cryptoService.generateSHA256Hash(password),
-      },
-    });
-    return plainToClass(UserEntity, user);
-  }
-
   async findUserByEmail(email: string) {
-    return await this.prismaService.users.findFirst({
+    return await this.prismaService.user.findFirst({
       where: { email: email },
     });
   }
 
   findAll() {
-    const userList = this.prismaService.users.findMany();
+    const userList = this.prismaService.user.findMany();
     return plainToClass(UserEntity, userList);
   }
 
   async findOne(id: number) {
-    const user = await this.prismaService.users.findUnique({ where: { id } });
+    const user = await this.prismaService.user.findUnique({ where: { id } });
     return plainToClass(UserEntity, user);
   }
 
