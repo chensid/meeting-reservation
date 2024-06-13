@@ -13,9 +13,9 @@ export class UserService {
     private cryptoService: CryptoService,
   ) {}
 
-  register(createUserDto: CreateUserDto) {
+  async register(createUserDto: CreateUserDto) {
     const { username, nickName, password, email } = createUserDto;
-    return this.prismaService.user.create({
+    const user = await this.prismaService.user.create({
       data: {
         username,
         nickName,
@@ -23,6 +23,7 @@ export class UserService {
         password: this.cryptoService.generateSHA256Hash(password),
       },
     });
+    return plainToClass(UserEntity, user);
   }
 
   async findUserByEmail(email: string) {

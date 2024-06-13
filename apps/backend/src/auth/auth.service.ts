@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CryptoService } from 'src/crypto/crypto.service';
 import { plainToClass } from 'class-transformer';
 import { AuthEntity } from './entities/auth.entity';
+import { UpdatePasswordAuthDto } from './dto/update-password-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,5 +24,18 @@ export class AuthService {
       throw new HttpException('用户名或密码错误', HttpStatus.BAD_REQUEST);
     }
     return plainToClass(AuthEntity, user);
+  }
+
+  async logout() {
+    return true;
+  }
+
+  async updatePassword(updatePasswordAuthDto: UpdatePasswordAuthDto) {
+    console.log(updatePasswordAuthDto);
+    return true;
+  }
+
+  async refreshToken() {
+    return true;
   }
 }

@@ -33,15 +33,17 @@ model Permission {
 }
 
 model UserRole {
-  id     Int @id @default(autoincrement())
   userId Int @map("user_id")
   roleId Int @map("role_id")
+
+  @@id([userId, roleId])
 }
 
 model RolePermission {
-  id         Int @id @default(autoincrement())
-  roleId     Int @map("role_id")
-  permission Int
+  roleId       Int @map("role_id")
+  permissionId Int @map("permission_id")
+
+  @@id([roleId, permissionId])
 }
 
 model MeetingRoom {
@@ -69,7 +71,8 @@ model Booking {
 }
 
 model BookingAttendee {
-  id        Int @id @default(autoincrement())
   userId    Int @map("user_id")
   bookingId Int @map("booking_id")
+
+  @@id([userId, bookingId])
 }
