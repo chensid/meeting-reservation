@@ -5,13 +5,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-ioredis-yet';
 import type { RedisOptions } from 'ioredis';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { CryptoModule } from './crypto/crypto.module';
 import { EmailModule } from './email/email.module';
+import { AuthGuard } from './common/guards/auth/auth.guard';
 
 @Module({
   imports: [
@@ -28,6 +30,15 @@ import { EmailModule } from './email/email.module';
         }),
       }),
       inject: [ConfigService],
+    }),
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN') },
+      }),
     }),
     PrismaModule,
     AuthModule,
@@ -46,6 +57,11 @@ import { EmailModule } from './email/email.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
+    },
+    // 全局守卫
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
   ],
 })

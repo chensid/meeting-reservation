@@ -1,8 +1,11 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiTags } from '@nestjs/swagger';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { UpdatePasswordAuthDto } from './dto/update-password-auth.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/common/decorators/public/public.decorator';
+import { Request } from 'express';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -10,22 +13,30 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @Public()
   async login(@Body() loginAuthDto: LoginAuthDto) {
     return this.authService.login(loginAuthDto);
   }
 
   @Post('logout')
+  @ApiBearerAuth()
   async logout() {
     return this.authService.logout();
   }
 
-  @Post('password')
-  async updatePassword(@Body() updatePasswordAuthDto: UpdatePasswordAuthDto) {
-    return this.authService.updatePassword(updatePasswordAuthDto);
+  @Post('update-password')
+  @ApiBearerAuth()
+  async updatePassword(
+    @Req() request: Request,
+    @Body() updatePasswordAuthDto: UpdatePasswordAuthDto,
+  ) {
+    const user = request['user'];
+    return this.authService.updatePassword(user.id, updatePasswordAuthDto);
   }
 
-  @Post('refreshToken')
-  async refreshToken() {
-    return this.authService.refreshToken();
+  @Post('refresh-token')
+  @Public()
+  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshToken(refreshTokenDto);
   }
 }
