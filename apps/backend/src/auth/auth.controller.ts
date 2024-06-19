@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { UpdatePasswordAuthDto } from './dto/update-password-auth.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public/public.decorator';
 import { Request } from 'express';
 
@@ -12,18 +12,21 @@ import { Request } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({ summary: '用户登录' })
   @Post('login')
   @Public()
   async login(@Body() loginAuthDto: LoginAuthDto) {
     return this.authService.login(loginAuthDto);
   }
 
+  @ApiOperation({ summary: '用户登出' })
   @Post('logout')
   @ApiBearerAuth()
   async logout() {
     return this.authService.logout();
   }
 
+  @ApiOperation({ summary: '更新用户密码' })
   @Post('update-password')
   @ApiBearerAuth()
   async updatePassword(
@@ -34,6 +37,7 @@ export class AuthController {
     return this.authService.updatePassword(user.id, updatePasswordAuthDto);
   }
 
+  @ApiOperation({ summary: '刷新用户令牌' })
   @Post('refresh-token')
   @Public()
   async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
