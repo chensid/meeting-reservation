@@ -43,7 +43,7 @@ export class UserService {
       this.prismaService.user.count(),
     ]);
     const list = plainToInstance(UserEntity, users);
-    return { list, total, page, limit };
+    return { list, total };
   }
 
   async findOne(id: number) {

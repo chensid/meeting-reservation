@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
 export class GetUsersDto {
   @ApiProperty({ description: '页码', example: 1, required: false })
@@ -15,5 +15,6 @@ export class GetUsersDto {
   @IsInt()
   @Type(() => Number)
   @Min(1)
+  @Max(1000)
   limit?: number = 10;
 }

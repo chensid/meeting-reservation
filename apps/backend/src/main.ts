@@ -23,7 +23,12 @@ async function bootstrap() {
     .setTitle('Meeting Reservation')
     .setDescription('The Meeting Reservation API description')
     .setVersion('0.1')
-    .addBearerAuth()
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      description: 'JWT token',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

@@ -19,7 +19,7 @@ export class CreateUserDto {
   @MinLength(6, { message: '密码不能少于 6 位' })
   password: string;
 
-  @ApiProperty({ description: '邮箱' })
+  @ApiProperty({ description: '邮箱', example: 'xx@xx.com' })
   @IsNotEmpty({ message: '邮箱不能为空' })
   @IsEmail({}, { message: '不是合法的邮箱格式' })
   email: string;
