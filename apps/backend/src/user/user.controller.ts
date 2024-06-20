@@ -3,13 +3,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpException,
   Inject,
   HttpStatus,
   Query,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,6 +24,7 @@ import {
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { EmailService } from '../email/email.service';
+import { Request } from 'express';
 
 @ApiTags('user')
 @ApiBearerAuth()
@@ -83,8 +84,10 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '更新用户' })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @Post('update')
+  update(@Req() request: Request, @Body() updateUserDto: UpdateUserDto) {
+    const user = request['user'];
+    const id = user.id;
     return this.userService.update(+id, updateUserDto);
   }
 

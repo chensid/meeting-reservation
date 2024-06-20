@@ -79,7 +79,7 @@ export class AuthService {
       });
       return '密码修改成功';
     } catch (error) {
-      return '密码修改失败';
+      throw new HttpException('密码修改失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

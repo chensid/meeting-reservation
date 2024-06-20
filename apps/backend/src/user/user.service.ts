@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -42,9 +42,17 @@ export class UserService {
     return plainToClass(UserEntity, user);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    id = 2;
+    try {
+      const user = await this.prismaService.user.update({
+        where: { id },
+        data: updateUserDto,
+      });
+      return plainToClass(UserEntity, user);
+    } catch {
+      throw new HttpException('更新失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   remove(id: number) {
