@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ResponseInterceptor } from './common/interceptors/response/response.interceptor';
 import { InvokeRecordInterceptor } from './common/interceptors/invoke-record/invoke-record.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -31,6 +32,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
   // 日志拦截器
   app.useGlobalInterceptors(new InvokeRecordInterceptor());
+  // 全局过滤器
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(3000);
 }
