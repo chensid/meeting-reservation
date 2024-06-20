@@ -7,8 +7,6 @@ import {
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CryptoService } from 'src/crypto/crypto.service';
-// import { plainToClass } from 'class-transformer';
-// import { AuthEntity } from './entities/auth.entity';
 import { UpdatePasswordAuthDto } from './dto/update-password-auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';

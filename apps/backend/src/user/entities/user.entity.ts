@@ -18,13 +18,13 @@ export class UserEntity implements User {
   @ApiProperty({ description: '邮箱' })
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '头像' })
   headPic: string;
 
   @ApiProperty({ description: '电话' })
   phoneNumber: string;
 
-  @Exclude()
+  @ApiProperty({ description: '是否冻结' })
   isFrozen: boolean;
 
   @Exclude()

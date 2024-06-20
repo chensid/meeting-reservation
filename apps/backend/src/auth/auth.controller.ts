@@ -38,7 +38,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: '刷新用户令牌' })
-  @Post('refresh-token')
+  @Post('refresh')
   @Public()
   async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.authService.refreshToken(refreshTokenDto);

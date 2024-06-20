@@ -10,6 +10,7 @@ import {
   HttpStatus,
   Query,
   Req,
+  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -25,6 +26,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { EmailService } from '../email/email.service';
 import { Request } from 'express';
+import { GetUsersDto } from './dto/get-users.dto';
 
 @ApiTags('user')
 @ApiBearerAuth()
@@ -58,7 +60,7 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '验证码' })
-  @Get('register-captcha')
+  @Get('captcha')
   async captcha(@Query('address') address: string) {
     const code = Math.random().toString().slice(2, 8);
     await this.cacheManager.set(`captcha_${address}`, code, 5 * 60 * 1000);
@@ -71,14 +73,15 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '获取所有用户' })
-  @Get()
+  @Get('list')
   @ApiOkResponse({ type: UserEntity, isArray: true })
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query() query: GetUsersDto) {
+    return this.userService.findAll(query);
   }
 
   @ApiOperation({ summary: '获取单个用户' })
   @Get(':id')
+  @ApiOkResponse({ type: UserEntity })
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
@@ -89,6 +92,12 @@ export class UserController {
     const user = request['user'];
     const id = user.id;
     return this.userService.update(+id, updateUserDto);
+  }
+
+  @ApiOperation({ summary: '冻结用户' })
+  @Patch(':id/freeze')
+  freeze(@Param('id') id: string) {
+    return this.userService.freeze(+id);
   }
 
   @ApiOperation({ summary: '删除用户' })
