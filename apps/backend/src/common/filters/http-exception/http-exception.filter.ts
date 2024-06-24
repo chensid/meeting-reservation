@@ -19,7 +19,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           ? exceptionResponse['message'].join(',')
           : exceptionResponse['message']
         : exceptionResponse;
-    const code = exceptionResponse['code'] || exception.name;
+    const code = exceptionResponse['code'] || status;
     response.status(status).json({
       code,
       status,

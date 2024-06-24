@@ -27,6 +27,7 @@ import { Cache } from 'cache-manager';
 import { EmailService } from '../email/email.service';
 import { Request } from 'express';
 import { GetUsersDto } from './dto/get-users.dto';
+import { Public } from 'src/common/decorators/public/public.decorator';
 
 @ApiTags('user')
 @ApiBearerAuth()
@@ -40,6 +41,7 @@ export class UserController {
 
   @ApiOperation({ summary: '用户注册' })
   @Post('register')
+  @Public()
   async register(@Body() createUserDto: CreateUserDto) {
     const captcha = await this.cacheManager.get(
       `captcha_${createUserDto.email}`,
@@ -61,6 +63,7 @@ export class UserController {
 
   @ApiOperation({ summary: '验证码' })
   @Get('captcha')
+  @Public()
   async captcha(@Query('address') address: string) {
     const code = Math.random().toString().slice(2, 8);
     await this.cacheManager.set(`captcha_${address}`, code, 5 * 60 * 1000);

@@ -46,7 +46,7 @@ const Login: React.FC = () => {
           <Input.Password placeholder="请输入密码" prefix={<LockOutlined />} />
         </Form.Item>
         <Form.Item>
-          <a>注册</a>
+          <a onClick={() => navigate("/register")}>注册</a>
           <a className="float-right">忘记密码</a>
         </Form.Item>
         <Form.Item>

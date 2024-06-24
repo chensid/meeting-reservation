@@ -41,7 +41,7 @@ request.interceptors.response.use(
   (error: AxiosError<ApiError>) => {
     if (error.response) {
       const { message: msg } = error.response.data;
-      message.error(msg);
+      message.error(msg || "系统异常");
       return Promise.reject(error);
     }
     return Promise.reject(error);

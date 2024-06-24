@@ -29,7 +29,7 @@ export class AuthService {
       },
     });
     if (!user) {
-      throw new HttpException('密码错误', HttpStatus.BAD_REQUEST);
+      throw new HttpException('用户名或密码错误', HttpStatus.BAD_REQUEST);
     }
     const payload = {
       id: user.id,
