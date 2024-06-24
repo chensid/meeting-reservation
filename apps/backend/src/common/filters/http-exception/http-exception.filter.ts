@@ -19,11 +19,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
           ? exceptionResponse['message'].join(',')
           : exceptionResponse['message']
         : exceptionResponse;
+    const code = exceptionResponse['code'] || exception.name;
     response.status(status).json({
-      code: status,
-      statusCode: status,
-      data: exception.message,
-      message: message,
+      code,
+      status,
+      message,
     });
   }
 }
