@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -6,31 +6,48 @@ import { CryptoService } from '../crypto/crypto.service';
 import { plainToInstance } from 'class-transformer';
 import { UserEntity } from './entities/user.entity';
 import { GetUsersDto } from './dto/get-users.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly prismaService: PrismaService,
     private cryptoService: CryptoService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async register(createUserDto: CreateUserDto) {
+    const captcha = await this.cacheManager.get(
+      `captcha_${createUserDto.email}`,
+    );
+    if (!captcha) {
+      throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST);
+    }
+    if (createUserDto.captcha !== captcha) {
+      throw new HttpException('验证码不正确', HttpStatus.BAD_REQUEST);
+    }
+    const foundUser = await this.prismaService.user.findFirst({
+      where: { email: createUserDto.email },
+    });
+    if (foundUser) {
+      throw new HttpException('该用户已存在', HttpStatus.BAD_REQUEST);
+    }
     const { username, nickname, password, email } = createUserDto;
-    const user = await this.prismaService.user.create({
-      data: {
-        username,
-        nickname,
-        email,
-        password: this.cryptoService.generateSHA256Hash(password),
-      },
-    });
-    return plainToInstance(UserEntity, user);
-  }
-
-  async findUserByEmail(email: string) {
-    return await this.prismaService.user.findFirst({
-      where: { email: email },
-    });
+    try {
+      const user = await this.prismaService.user.create({
+        data: {
+          username,
+          nickname,
+          email,
+          password: this.cryptoService.generateSHA256Hash(password),
+        },
+      });
+      await this.cacheManager.del(`captcha_${email}`);
+      return plainToInstance(UserEntity, user);
+    } catch {
+      throw new HttpException('注册失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async findAll(query: GetUsersDto) {

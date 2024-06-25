@@ -15,3 +15,15 @@ export const getCaptcha = (params: { address: string }) => {
     params,
   });
 };
+
+export const forgotPassword = (data: {
+  email: string;
+  captcha: string;
+  password: string;
+}) => {
+  return request({
+    method: "POST",
+    url: "/auth/forgot-password",
+    data,
+  });
+};

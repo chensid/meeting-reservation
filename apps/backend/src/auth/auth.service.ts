@@ -1,6 +1,7 @@
 import {
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -11,6 +12,9 @@ import { UpdatePasswordAuthDto } from './dto/update-password-auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +23,7 @@ export class AuthService {
     private cryptoService: CryptoService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
   async login(loginAuthDto: LoginAuthDto) {
     const { username, password } = loginAuthDto;
@@ -98,6 +103,37 @@ export class AuthService {
       return { accessToken };
     } catch (error) {
       throw new UnauthorizedException('token 已失效，请重新登录');
+    }
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const findUser = await this.prismaService.user.findFirst({
+      where: { email: forgotPasswordDto.email },
+    });
+    if (!findUser) {
+      throw new HttpException('用户不存在', HttpStatus.BAD_REQUEST);
+    }
+    const captcha = await this.cacheManager.get(
+      `captcha_${forgotPasswordDto.email}`,
+    );
+    if (!captcha) {
+      throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST);
+    }
+    if (forgotPasswordDto.captcha !== captcha) {
+      throw new HttpException('验证码不正确', HttpStatus.BAD_REQUEST);
+    }
+    const hashedPassword = this.cryptoService.generateSHA256Hash(
+      forgotPasswordDto.password,
+    );
+    try {
+      await this.prismaService.user.update({
+        where: { email: forgotPasswordDto.email },
+        data: { password: hashedPassword },
+      });
+      await this.cacheManager.del(`captcha_${forgotPasswordDto.email}`);
+      return { message: '密码重置成功' };
+    } catch {
+      throw new HttpException('密码重置失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

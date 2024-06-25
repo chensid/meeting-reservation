@@ -19,6 +19,7 @@ import { Request } from 'express';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { EmailService } from 'src/email/email.service';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -50,6 +51,10 @@ export class AuthController {
     if (!address) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
     }
+    const captcha = await this.cacheManager.get(`captcha_${address}`);
+    if (captcha) {
+      throw new HttpException('请勿重复发送', HttpStatus.BAD_REQUEST);
+    }
     const code = Math.random().toString().slice(2, 8);
     await this.cacheManager.set(`captcha_${address}`, code, 5 * 60 * 1000);
     await this.emailService.sendEmail({
@@ -76,5 +81,12 @@ export class AuthController {
   @Public()
   async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.authService.refreshToken(refreshTokenDto);
+  }
+
+  @ApiOperation({ summary: '找回密码' })
+  @Post('forgot-password')
+  @Public()
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(forgotPasswordDto);
   }
 }

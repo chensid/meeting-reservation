@@ -7,7 +7,6 @@ import { redisStore } from 'cache-manager-ioredis-yet';
 import type { RedisOptions } from 'ioredis';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { CacheInterceptor } from '@nestjs/cache-manager';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
@@ -49,10 +48,6 @@ import { AuthGuard } from './common/guards/auth/auth.guard';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
     // 全局拦截器,(classToPlain)
     {
       provide: APP_INTERCEPTOR,

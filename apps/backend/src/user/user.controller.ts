@@ -5,9 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  HttpException,
-  Inject,
-  HttpStatus,
   Query,
   Req,
   Patch,
@@ -22,8 +19,6 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
 import { Request } from 'express';
 import { GetUsersDto } from './dto/get-users.dto';
 import { Public } from 'src/common/decorators/public/public.decorator';
@@ -32,30 +27,12 @@ import { Public } from 'src/common/decorators/public/public.decorator';
 @ApiBearerAuth()
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: '用户注册' })
   @Post('register')
   @Public()
   async register(@Body() createUserDto: CreateUserDto) {
-    const captcha = await this.cacheManager.get(
-      `captcha_${createUserDto.email}`,
-    );
-    if (!captcha) {
-      throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST);
-    }
-    if (createUserDto.captcha !== captcha) {
-      throw new HttpException('验证码不正确', HttpStatus.BAD_REQUEST);
-    }
-    const foundUser = await this.userService.findUserByEmail(
-      createUserDto.email,
-    );
-    if (foundUser) {
-      throw new HttpException('该用户已存在', HttpStatus.BAD_REQUEST);
-    }
     return this.userService.register(createUserDto);
   }
 

@@ -47,7 +47,12 @@ const Login: React.FC = () => {
         </Form.Item>
         <Form.Item>
           <a onClick={() => navigate("/register")}>注册</a>
-          <a className="float-right">忘记密码</a>
+          <a
+            className="float-right"
+            onClick={() => navigate("/forgot-password")}
+          >
+            忘记密码
+          </a>
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" block loading={isPending}>
