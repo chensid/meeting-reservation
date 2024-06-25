@@ -24,7 +24,6 @@ import {
 } from '@nestjs/swagger';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { EmailService } from '../email/email.service';
 import { Request } from 'express';
 import { GetUsersDto } from './dto/get-users.dto';
 import { Public } from 'src/common/decorators/public/public.decorator';
@@ -36,7 +35,6 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    private emailService: EmailService,
   ) {}
 
   @ApiOperation({ summary: '用户注册' })
@@ -59,20 +57,6 @@ export class UserController {
       throw new HttpException('该用户已存在', HttpStatus.BAD_REQUEST);
     }
     return this.userService.register(createUserDto);
-  }
-
-  @ApiOperation({ summary: '验证码' })
-  @Get('captcha')
-  @Public()
-  async captcha(@Query('address') address: string) {
-    const code = Math.random().toString().slice(2, 8);
-    await this.cacheManager.set(`captcha_${address}`, code, 5 * 60 * 1000);
-    await this.emailService.sendEmail({
-      to: address,
-      subject: '注册验证码',
-      html: `<p>你的注册验证码是 ${code}</p>`,
-    });
-    return '发送成功';
   }
 
   @ApiOperation({ summary: '获取所有用户' })

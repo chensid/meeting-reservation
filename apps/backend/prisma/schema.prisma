@@ -11,7 +11,7 @@ model User {
   id          Int      @id @default(autoincrement())
   username    String   @unique @db.VarChar(50)
   password    String   @db.VarChar(100)
-  nickName    String   @map("nick_name") @db.VarChar(50)
+  nickname    String   @db.VarChar(50)
   email       String   @unique @db.VarChar(50)
   headPic     String?  @map("head_pic") @db.VarChar(100)
   phoneNumber String?  @map("phone_number") @db.VarChar(20)

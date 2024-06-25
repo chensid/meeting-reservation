@@ -11,7 +11,7 @@ export class CreateUserDto {
   @ApiProperty({ description: '昵称' })
   @Transform(({ value }) => value?.trim())
   @IsNotEmpty({ message: '昵称不能为空' })
-  nickName: string;
+  nickname: string;
 
   @ApiProperty({ description: '密码', minimum: 6, maximum: 50 })
   @Transform(({ value }) => value?.trim())

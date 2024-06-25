@@ -11,15 +11,20 @@ export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const status = exception.getStatus();
-    const exceptionResponse = exception.getResponse();
-    const message =
-      typeof exceptionResponse === 'object'
-        ? Array.isArray(exceptionResponse['message'])
-          ? exceptionResponse['message'].join(',')
-          : exceptionResponse['message']
-        : exceptionResponse;
-    const code = exceptionResponse['code'] || status;
+    let status = 500;
+    let message = '系统错误';
+    let code = status;
+    if (exception instanceof HttpException) {
+      status = exception.getStatus();
+      const exceptionResponse = exception.getResponse();
+      message =
+        typeof exceptionResponse === 'object'
+          ? Array.isArray(exceptionResponse['message'])
+            ? exceptionResponse['message'].join(',')
+            : exceptionResponse['message']
+          : exceptionResponse;
+      code = exceptionResponse['code'] || status;
+    }
     response.status(status).json({
       code,
       status,

@@ -12,5 +12,5 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @ApiProperty({ description: '昵称' })
   @Transform(({ value }) => value?.trim())
   @IsNotEmpty({ message: '昵称不能为空' })
-  nickName: string;
+  nickname: string;
 }

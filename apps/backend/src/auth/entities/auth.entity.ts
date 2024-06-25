@@ -9,7 +9,7 @@ export class AuthEntity implements User {
   username: string;
 
   @ApiProperty({ description: '昵称' })
-  nickName: string;
+  nickname: string;
 
   @Exclude()
   password: string;

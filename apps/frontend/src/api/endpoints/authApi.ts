@@ -7,3 +7,11 @@ export const login = (data: { username: string; password: string }) => {
     data,
   });
 };
+
+export const getCaptcha = (params: { address: string }) => {
+  return request({
+    method: "GET",
+    url: "/auth/captcha",
+    params,
+  });
+};
