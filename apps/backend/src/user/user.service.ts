@@ -8,6 +8,7 @@ import { UserEntity } from './entities/user.entity';
 import { GetUsersDto } from './dto/get-users.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -51,11 +52,22 @@ export class UserService {
   }
 
   async findAll(query: GetUsersDto) {
-    const { page, limit } = query;
+    const { username, nickname, email, page, limit } = query;
+    const where: Prisma.UserWhereInput = {};
+    if (username) {
+      where['username'] = { contains: username };
+    }
+    if (nickname) {
+      where['nickname'] = { contains: nickname };
+    }
+    if (email) {
+      where['email'] = { contains: email };
+    }
     const [users, total] = await this.prismaService.$transaction([
       this.prismaService.user.findMany({
         skip: (page - 1) * limit,
         take: limit,
+        where,
       }),
       this.prismaService.user.count(),
     ]);
@@ -89,11 +101,11 @@ export class UserService {
       throw new HttpException('用户不存在', HttpStatus.NOT_FOUND);
     }
     try {
-      const updateUser = await this.prismaService.user.update({
+      await this.prismaService.user.update({
         where: { id },
         data: { isFrozen: true },
       });
-      return plainToInstance(UserEntity, updateUser);
+      return { message: '冻结成功' };
     } catch {
       throw new HttpException('冻结失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }

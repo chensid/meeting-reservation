@@ -9,14 +9,18 @@ const BasicLayout: React.FC = () => {
       key: "1",
       label: "Home",
     },
+    {
+      key: "2",
+      label: "User",
+    },
   ];
   return (
     <Layout className="min-h-screen">
       <Header className="bg-white shadow-sm">header</Header>
       <Layout>
-        <Sider collapsible>
+        <Sider collapsible theme="light">
           <Menu
-            theme="dark"
+            theme="light"
             mode="inline"
             items={menuItems}
             className="flex-1 min-w-0"
