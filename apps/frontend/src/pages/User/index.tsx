@@ -101,6 +101,7 @@ const UserList: React.FC = () => {
 
   const onFinish = (values: UserParams) => {
     setQueryParams({ ...values });
+    setPaginationParams((prev) => ({ page: 1, limit: prev.limit }));
   };
   const onReset = () => {
     form.resetFields();
