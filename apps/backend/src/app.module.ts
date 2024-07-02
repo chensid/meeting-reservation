@@ -14,6 +14,7 @@ import { CryptoModule } from './crypto/crypto.module';
 import { EmailModule } from './email/email.module';
 import { AuthGuard } from './common/guards/auth/auth.guard';
 import { MeetingRoomModule } from './meeting-room/meeting-room.module';
+import { BookingModule } from './booking/booking.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { MeetingRoomModule } from './meeting-room/meeting-room.module';
     CryptoModule,
     EmailModule,
     MeetingRoomModule,
+    BookingModule,
   ],
   controllers: [AppController],
   providers: [

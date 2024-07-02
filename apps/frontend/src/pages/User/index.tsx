@@ -37,6 +37,12 @@ const UserList: React.FC = () => {
 
   const columns: TableProps["columns"] = [
     {
+      title: "序号",
+      dataIndex: "index",
+      key: "index",
+      render: (_, __, index) => index + 1,
+    },
+    {
       title: "用户名",
       dataIndex: "username",
       key: "username",
