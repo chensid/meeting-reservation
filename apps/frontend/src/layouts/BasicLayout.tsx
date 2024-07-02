@@ -1,17 +1,26 @@
 import { Layout, Menu, MenuProps } from "antd";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const { Header, Sider, Content, Footer } = Layout;
 
 const BasicLayout: React.FC = () => {
+  const navigate = useNavigate();
+  
   const menuItems: MenuProps["items"] = [
     {
       key: "1",
       label: "Home",
+      onClick: () => navigate("/"),
     },
     {
       key: "2",
       label: "User",
+      onClick: () => navigate("/user"),
+    },
+    {
+      key: "3",
+      label: "Meeting Room",
+      onClick: () => navigate("/meeting-room"),
     },
   ];
   return (

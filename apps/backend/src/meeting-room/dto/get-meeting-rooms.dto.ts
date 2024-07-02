@@ -2,21 +2,21 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
-export class GetUsersDto {
-  @ApiProperty({ description: '用户名', required: false })
+export class GetMeetingRoomsDto {
+  @ApiProperty({ description: '会议室名称', required: false })
   @Transform(({ value }) => value?.trim())
   @IsOptional()
-  username?: string;
+  name?: string;
 
-  @ApiProperty({ description: '昵称', required: false })
-  @Transform(({ value }) => value?.trim())
+  @ApiProperty({ description: '会议室容量', required: false })
   @IsOptional()
-  nickname?: string;
+  @Type(() => Number)
+  capacity?: number;
 
-  @ApiProperty({ description: '邮箱', required: false })
+  @ApiProperty({ description: '设备', required: false })
   @Transform(({ value }) => value?.trim())
   @IsOptional()
-  email?: string;
+  equipment?: string;
 
   @ApiProperty({ description: '页码', example: 1, required: false })
   @IsOptional()

@@ -51,8 +51,8 @@ model MeetingRoom {
   name        String   @db.VarChar(50)
   capacity    Int
   location    String   @db.VarChar(50)
-  equipment   String   @db.VarChar(50)
-  description String   @db.VarChar(100)
+  equipment   String?   @db.VarChar(50)
+  description String?   @db.VarChar(100)
   isBooked    Boolean  @default(false) @map("is_booked")
   createTime  DateTime @default(now()) @map("create_time")
   updateTime  DateTime @updatedAt @map("update_time")

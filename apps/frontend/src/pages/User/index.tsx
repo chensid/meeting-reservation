@@ -69,6 +69,12 @@ const UserList: React.FC = () => {
       render: (text) => dayjs(text).format("YYYY-MM-DD HH:mm:ss"),
     },
     {
+      title: "状态",
+      dataIndex: "isFrozen",
+      key: "isFrozen",
+      render: (text) => (text ? "冻结" : "正常"),
+    },
+    {
       title: "操作",
       key: "action",
       render: (_, record) => (
@@ -131,7 +137,7 @@ const UserList: React.FC = () => {
           <Col span={6}>
             <Form.Item>
               <Space>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" loading={isFetching}>
                   查询
                 </Button>
                 <Button type="default" onClick={onReset}>
@@ -151,7 +157,6 @@ const UserList: React.FC = () => {
           showSizeChanger: true,
           pageSize: paginationParams.limit,
           total: data?.total || 0,
-          size: "small",
         }}
         onChange={handleChange}
       />

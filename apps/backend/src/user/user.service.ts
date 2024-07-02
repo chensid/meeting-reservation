@@ -36,7 +36,7 @@ export class UserService {
     }
     const { username, nickname, password, email } = createUserDto;
     try {
-      const user = await this.prismaService.user.create({
+      await this.prismaService.user.create({
         data: {
           username,
           nickname,
@@ -45,7 +45,7 @@ export class UserService {
         },
       });
       await this.cacheManager.del(`captcha_${email}`);
-      return plainToInstance(UserEntity, user);
+      return { message: '注册成功' };
     } catch {
       throw new HttpException('注册失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -63,16 +63,20 @@ export class UserService {
     if (email) {
       where['email'] = { contains: email };
     }
-    const [users, total] = await this.prismaService.$transaction([
-      this.prismaService.user.findMany({
-        skip: (page - 1) * limit,
-        take: limit,
-        where,
-      }),
-      this.prismaService.user.count({ where }),
-    ]);
-    const list = plainToInstance(UserEntity, users);
-    return { list, total };
+    try {
+      const [users, total] = await this.prismaService.$transaction([
+        this.prismaService.user.findMany({
+          skip: (page - 1) * limit,
+          take: limit,
+          where,
+        }),
+        this.prismaService.user.count({ where }),
+      ]);
+      const list = plainToInstance(UserEntity, users);
+      return { list, total };
+    } catch {
+      throw new HttpException('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async findOne(id: number) {
