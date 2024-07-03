@@ -51,8 +51,8 @@ model MeetingRoom {
   name        String   @db.VarChar(50)
   capacity    Int
   location    String   @db.VarChar(50)
-  equipment   String?   @db.VarChar(50)
-  description String?   @db.VarChar(100)
+  equipment   String?  @db.VarChar(50)
+  description String?  @db.VarChar(100)
   isBooked    Boolean  @default(false) @map("is_booked")
   createTime  DateTime @default(now()) @map("create_time")
   updateTime  DateTime @updatedAt @map("update_time")
@@ -64,8 +64,8 @@ model Booking {
   roomId     Int      @map("room_id")
   startTime  DateTime @map("start_time")
   endTime    DateTime @map("end_time")
-  status     String   @db.VarChar(20)
-  note       String   @db.VarChar(100)
+  status     String   @default("0") @db.VarChar(20)
+  note       String?  @db.VarChar(100)
   createTime DateTime @default(now()) @map("create_time")
   updateTime DateTime @updatedAt @map("update_time")
 }

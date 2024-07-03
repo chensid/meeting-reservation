@@ -6,6 +6,7 @@ import Register from "@/pages/Register";
 import ForgotPassword from "@/pages/ForgotPassword";
 import UserList from "@/pages/User";
 import MeetingRoom from "@/pages/MeetingRoom";
+import BookingList from "@/pages/Booking";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
         path: "/meeting-room",
         element: <MeetingRoom />,
       },
+      {
+        path: "/booking",
+        element: <BookingList />,
+      }
     ],
   },
   {

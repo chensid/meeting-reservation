@@ -22,6 +22,11 @@ const BasicLayout: React.FC = () => {
       label: "Meeting Room",
       onClick: () => navigate("/meeting-room"),
     },
+    {
+      key: "4",
+      label: "Booking",
+      onClick: () => navigate("/booking"),
+    }
   ];
   return (
     <Layout className="min-h-screen">
