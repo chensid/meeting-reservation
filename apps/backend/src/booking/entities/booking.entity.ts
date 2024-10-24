@@ -3,13 +3,13 @@ import { Booking } from '@prisma/client';
 
 export class BookingEntity implements Booking {
   @ApiProperty({ description: 'ID' })
-  id: number;
+  id: string;
 
   @ApiProperty({ description: '用户ID' })
-  userId: number;
+  userId: string;
 
   @ApiProperty({ description: '房间ID' })
-  roomId: number;
+  roomId: string;
 
   @ApiProperty({ description: '开始时间' })
   startTime: Date;

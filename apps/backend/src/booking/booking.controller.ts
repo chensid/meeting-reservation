@@ -50,26 +50,26 @@ export class BookingController {
 
   @Patch('apply/:id')
   apply(@Param('id') id: string) {
-    return this.bookingService.apply(+id);
+    return this.bookingService.apply(id);
   }
 
   @Patch('accept/:id')
   reject(@Param('id') id: string) {
-    return this.bookingService.reject(+id);
+    return this.bookingService.reject(id);
   }
 
   @Patch('cancel/:id')
   cancel(@Param('id') id: string) {
-    return this.bookingService.cancel(+id);
+    return this.bookingService.cancel(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
-    return this.bookingService.update(+id, updateBookingDto);
+    return this.bookingService.update(id, updateBookingDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.bookingService.remove(+id);
+    return this.bookingService.remove(id);
   }
 }

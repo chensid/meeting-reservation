@@ -56,7 +56,7 @@ export class AuthService {
   }
 
   async updatePassword(
-    userId: number,
+    userId: string,
     updatePasswordAuthDto: UpdatePasswordAuthDto,
   ) {
     const user = await this.prismaService.user.findUnique({

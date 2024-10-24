@@ -2,14 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { GetBookingsDto } from './dto/get-bookings.dto';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class BookingService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createBookingDto: CreateBookingDto, userId: number) {
+  async create(createBookingDto: CreateBookingDto, userId: string) {
     const { roomId, startTime, endTime, note } = createBookingDto;
     if (startTime >= endTime) {
       throw new HttpException(
@@ -63,22 +62,13 @@ export class BookingService {
       page,
       limit,
     } = query;
-    const where: Prisma.BookingWhereInput = {};
-    if (username) {
-      where['username'] = { contains: username };
-    }
-    if (roomName) {
-      where['roomName'] = { contains: roomName };
-    }
-    if (roomPosition) {
-      where['roomPosition'] = { contains: roomPosition };
-    }
-    if (startTime) {
-      where['startTime'] = { gte: new Date(startTime) };
-    }
-    if (endTime) {
-      where['endTime'] = { lte: new Date(endTime) };
-    }
+    const where = {
+      ...(username && { username: { contains: username } }),
+      ...(roomName && { roomName: { contains: roomName } }),
+      ...(roomPosition && { roomPosition: { contains: roomPosition } }),
+      ...(startTime && { startTime: { gte: new Date(startTime) } }),
+      ...(endTime && { endTime: { lte: new Date(endTime) } }),
+    };
     try {
       const [bookings, total] = await this.prismaService.$transaction([
         this.prismaService.booking.findMany({
@@ -98,7 +88,7 @@ export class BookingService {
     return `This action returns a #${id} booking`;
   }
 
-  async apply(id: number) {
+  async apply(id: string) {
     try {
       await this.prismaService.booking.update({
         where: { id },
@@ -110,7 +100,7 @@ export class BookingService {
     }
   }
 
-  async reject(id: number) {
+  async reject(id: string) {
     try {
       await this.prismaService.booking.update({
         where: { id },
@@ -122,7 +112,7 @@ export class BookingService {
     }
   }
 
-  async cancel(id: number) {
+  async cancel(id: string) {
     try {
       await this.prismaService.booking.update({
         where: { id },
@@ -134,12 +124,12 @@ export class BookingService {
     }
   }
 
-  update(id: number, updateBookingDto: UpdateBookingDto) {
+  update(id: string, updateBookingDto: UpdateBookingDto) {
     console.log(updateBookingDto);
     return `This action updates a #${id} booking`;
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       await this.prismaService.booking.delete({
         where: { id },

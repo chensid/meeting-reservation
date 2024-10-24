@@ -5,5 +5,5 @@ import { IsNotEmpty } from 'class-validator';
 export class UpdateMeetingRoomDto extends PartialType(CreateMeetingRoomDto) {
   @ApiProperty({ description: 'ID' })
   @IsNotEmpty()
-  id: number;
+  id: string;
 }

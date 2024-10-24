@@ -3,7 +3,7 @@ import { MeetingRoom } from '@prisma/client';
 
 export class MeetingRoomEntity implements MeetingRoom {
   @ApiProperty({ description: 'ID' })
-  id: number;
+  id: string;
 
   @ApiProperty({ description: '会议室名称' })
   name: string;

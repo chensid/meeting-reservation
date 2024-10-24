@@ -3,7 +3,7 @@ import { Exclude } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 export class AuthEntity implements User {
   @ApiProperty({ description: '用户ID' })
-  id: number;
+  id: string;
 
   @ApiProperty({ description: '用户名' })
   username: string;

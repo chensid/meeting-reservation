@@ -22,14 +22,17 @@ import { BookingModule } from './booking/booking.module';
     CacheModule.registerAsync<RedisOptions>({
       isGlobal: true,
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        store: await redisStore({
+      useFactory: async (configService: ConfigService) => {
+        const store = await redisStore({
           host: configService.get<string>('REDIS_HOST'),
           port: configService.get<number>('REDIS_PORT'),
           password: configService.get<string>('REDIS_PASSWORD'),
           ttl: configService.get<number>('REDIS_TTL'),
-        }),
-      }),
+        });
+        return {
+          store,
+        };
+      },
       inject: [ConfigService],
     }),
     JwtModule.registerAsync({
@@ -53,10 +56,10 @@ import { BookingModule } from './booking/booking.module';
   providers: [
     AppService,
     // 全局拦截器,(classToPlain)
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ClassSerializerInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: ClassSerializerInterceptor,
+    // },
     // 全局守卫
     {
       provide: APP_GUARD,

@@ -3,12 +3,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CryptoService } from '../crypto/crypto.service';
-import { plainToInstance } from 'class-transformer';
-import { UserEntity } from './entities/user.entity';
 import { GetUsersDto } from './dto/get-users.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -53,18 +50,13 @@ export class UserService {
 
   async findAll(query: GetUsersDto) {
     const { username, nickname, email, page, limit } = query;
-    const where: Prisma.UserWhereInput = {};
-    if (username) {
-      where['username'] = { contains: username };
-    }
-    if (nickname) {
-      where['nickname'] = { contains: nickname };
-    }
-    if (email) {
-      where['email'] = { contains: email };
-    }
+    const where = {
+      ...(username && { username: { contains: username } }),
+      ...(nickname && { nickname: { contains: nickname } }),
+      ...(email && { email: { contains: email } }),
+    };
     try {
-      const [users, total] = await this.prismaService.$transaction([
+      const [list, total] = await this.prismaService.$transaction([
         this.prismaService.user.findMany({
           skip: (page - 1) * limit,
           take: limit,
@@ -72,34 +64,33 @@ export class UserService {
         }),
         this.prismaService.user.count({ where }),
       ]);
-      const list = plainToInstance(UserEntity, users);
       return { list, total };
     } catch {
       throw new HttpException('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const user = await this.prismaService.user.findUnique({ where: { id } });
     if (!user) {
       throw new HttpException('用户不存在', HttpStatus.NOT_FOUND);
     }
-    return plainToInstance(UserEntity, user);
+    return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     try {
       const user = await this.prismaService.user.update({
         where: { id },
         data: updateUserDto,
       });
-      return plainToInstance(UserEntity, user);
+      return user;
     } catch {
       throw new HttpException('更新失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async freeze(id: number) {
+  async freeze(id: string) {
     const user = await this.prismaService.user.findUnique({ where: { id } });
     if (!user) {
       throw new HttpException('用户不存在', HttpStatus.NOT_FOUND);
@@ -115,7 +106,7 @@ export class UserService {
     }
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} user`;
   }
 }

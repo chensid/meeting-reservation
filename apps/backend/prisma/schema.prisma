@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["omitApi"]
 }
 
 datasource db {
@@ -8,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid(7))
   username    String   @unique @db.VarChar(50)
   password    String   @db.VarChar(100)
   nickname    String   @db.VarChar(50)
@@ -22,32 +23,32 @@ model User {
 }
 
 model Role {
-  id   Int    @id @default(autoincrement())
+  id   String @id @default(uuid(7))
   name String @db.VarChar(20)
 }
 
 model Permission {
-  id          Int    @id @default(autoincrement())
+  id          String @id @default(uuid(7))
   code        String @db.VarChar(20)
   description String @db.VarChar(100)
 }
 
 model UserRole {
-  userId Int @map("user_id")
-  roleId Int @map("role_id")
+  userId String @map("user_id")
+  roleId String @map("role_id")
 
   @@id([userId, roleId])
 }
 
 model RolePermission {
-  roleId       Int @map("role_id")
-  permissionId Int @map("permission_id")
+  roleId       String @map("role_id")
+  permissionId String @map("permission_id")
 
   @@id([roleId, permissionId])
 }
 
 model MeetingRoom {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid(7))
   name        String   @db.VarChar(50)
   capacity    Int
   location    String   @db.VarChar(50)
@@ -59,9 +60,9 @@ model MeetingRoom {
 }
 
 model Booking {
-  id         Int      @id @default(autoincrement())
-  userId     Int      @map("user_id")
-  roomId     Int      @map("room_id")
+  id         String   @id @default(uuid(7))
+  userId     String   @map("user_id")
+  roomId     String   @map("room_id")
   startTime  DateTime @map("start_time")
   endTime    DateTime @map("end_time")
   status     String   @default("0") @db.VarChar(20)
@@ -71,8 +72,8 @@ model Booking {
 }
 
 model BookingAttendee {
-  userId    Int @map("user_id")
-  bookingId Int @map("booking_id")
+  userId    String @map("user_id")
+  bookingId String @map("booking_id")
 
   @@id([userId, bookingId])
 }

@@ -47,7 +47,7 @@ export class UserController {
   @Get(':id')
   @ApiOkResponse({ type: UserEntity })
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return this.userService.findOne(id);
   }
 
   @ApiOperation({ summary: '更新用户' })
@@ -55,18 +55,18 @@ export class UserController {
   update(@Req() request: Request, @Body() updateUserDto: UpdateUserDto) {
     const user = request['user'];
     const id = user.id;
-    return this.userService.update(+id, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @ApiOperation({ summary: '冻结用户' })
   @Patch(':id/freeze')
   freeze(@Param('id') id: string) {
-    return this.userService.freeze(+id);
+    return this.userService.freeze(id);
   }
 
   @ApiOperation({ summary: '删除用户' })
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }

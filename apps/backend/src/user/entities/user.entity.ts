@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UserEntity implements User {
   @ApiProperty({ description: '用户ID' })
-  id: number;
+  id: string;
 
   @ApiProperty({ description: '用户名' })
   username: string;

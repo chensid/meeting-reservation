@@ -5,8 +5,8 @@ import { IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 export class CreateBookingDto {
   @ApiProperty({ description: '会议室id' })
   @IsNotEmpty()
-  @Type(() => Number)
-  roomId: number;
+  @Type(() => String)
+  roomId: string;
 
   @ApiProperty({ description: '会议开始时间', example: 1720000402079 })
   @IsNotEmpty()

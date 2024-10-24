@@ -42,7 +42,7 @@ export class MeetingRoomController {
   @Get(':id')
   @ApiOperation({ summary: '获取单个会议室' })
   findOne(@Param('id') id: string) {
-    return this.meetingRoomService.findOne(+id);
+    return this.meetingRoomService.findOne(id);
   }
 
   @Patch('update')
@@ -54,6 +54,6 @@ export class MeetingRoomController {
   @Delete(':id')
   @ApiOperation({ summary: '删除会议室' })
   remove(@Param('id') id: string) {
-    return this.meetingRoomService.remove(+id);
+    return this.meetingRoomService.remove(id);
   }
 }
