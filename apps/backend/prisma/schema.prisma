@@ -9,17 +9,18 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(uuid(7))
-  username    String   @unique @db.VarChar(50)
-  password    String   @db.VarChar(100)
-  nickname    String   @db.VarChar(50)
-  email       String   @unique @db.VarChar(50)
-  headPic     String?  @map("head_pic") @db.VarChar(100)
-  phoneNumber String?  @map("phone_number") @db.VarChar(20)
-  isFrozen    Boolean  @default(false) @map("is_frozen")
-  isAdmin     Boolean  @default(false) @map("is_admin")
-  createTime  DateTime @default(now()) @map("create_time")
-  updateTime  DateTime @updatedAt @map("update_time")
+  id          String    @id @default(uuid(7))
+  username    String    @unique @db.VarChar(50)
+  password    String    @db.VarChar(100)
+  nickname    String    @db.VarChar(50)
+  email       String    @unique @db.VarChar(50)
+  headPic     String?   @map("head_pic") @db.VarChar(100)
+  phoneNumber String?   @map("phone_number") @db.VarChar(20)
+  isFrozen    Boolean   @default(false) @map("is_frozen")
+  isAdmin     Boolean   @default(false) @map("is_admin")
+  createTime  DateTime  @default(now()) @map("create_time")
+  updateTime  DateTime  @updatedAt @map("update_time")
+  bookings    Booking[]
 }
 
 model Role {
@@ -57,6 +58,8 @@ model MeetingRoom {
   isBooked    Boolean  @default(false) @map("is_booked")
   createTime  DateTime @default(now()) @map("create_time")
   updateTime  DateTime @updatedAt @map("update_time")
+
+  bookings Booking[]
 }
 
 model Booking {
@@ -69,6 +72,12 @@ model Booking {
   note       String?  @db.VarChar(100)
   createTime DateTime @default(now()) @map("create_time")
   updateTime DateTime @updatedAt @map("update_time")
+
+  user        User        @relation(fields: [userId], references: [id])
+  meetingRoom MeetingRoom @relation(fields: [roomId], references: [id])
+
+  @@index([userId])
+  @@index([roomId])
 }
 
 model BookingAttendee {

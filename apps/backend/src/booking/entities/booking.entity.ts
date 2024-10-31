@@ -18,7 +18,7 @@ export class BookingEntity implements Booking {
   endTime: Date;
 
   @ApiProperty({
-    description: '状态, 0: 申请中, 1: 申请通过, 2:申请失败  3: 已解除',
+    description: '状态, 0: 待审批, 1: 已通过, 2:已拒绝  3: 已取消',
   })
   status: string;
 

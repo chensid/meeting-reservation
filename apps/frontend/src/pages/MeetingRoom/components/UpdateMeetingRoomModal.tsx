@@ -14,7 +14,7 @@ type MeetingRoomModalProps = {
   onCancel?: () => void;
 };
 type UpdateMeetingRoomParams = {
-  id: number;
+  id: string;
   name: string;
   capacity: number;
   location: string;
@@ -23,10 +23,11 @@ type UpdateMeetingRoomParams = {
 };
 const UpdateMeetingRoomModal: React.FC<MeetingRoomModalProps> = (props) => {
   const { id, title = "会议室", visible, onOk, onCancel } = props;
+
   const [form] = Form.useForm<UpdateMeetingRoomParams>();
 
   const { mutate: initialMutate, isPending: isLoading } = useMutation({
-    mutationFn: () => getMeetingRoom(Number(id)),
+    mutationFn: () => getMeetingRoom(id),
     onSuccess: (data) => {
       form.setFieldsValue(data);
     },
@@ -49,7 +50,7 @@ const UpdateMeetingRoomModal: React.FC<MeetingRoomModalProps> = (props) => {
 
   const handleOk = () => {
     form.validateFields().then((values) => {
-      mutate({ ...values, id: Number(id) });
+      mutate({ ...values, id });
     });
   };
   const handleCancel = () => {

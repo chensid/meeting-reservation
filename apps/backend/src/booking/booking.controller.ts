@@ -5,13 +5,11 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Query,
   Req,
 } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
-import { UpdateBookingDto } from './dto/update-booking.dto';
 import {
   ApiBearerAuth,
   ApiTags,
@@ -48,28 +46,33 @@ export class BookingController {
     return this.bookingService.findOne(+id);
   }
 
-  @Patch('apply/:id')
-  apply(@Param('id') id: string) {
-    return this.bookingService.apply(id);
+  @Patch('approve/:id')
+  @ApiOperation({ summary: '批准预订' })
+  approve(@Param('id') id: string) {
+    return this.bookingService.approve(id);
   }
 
-  @Patch('accept/:id')
+  @Patch('reject/:id')
+  @ApiOperation({ summary: '拒绝预订' })
   reject(@Param('id') id: string) {
     return this.bookingService.reject(id);
   }
 
   @Patch('cancel/:id')
+  @ApiOperation({ summary: '取消预订' })
   cancel(@Param('id') id: string) {
     return this.bookingService.cancel(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
-    return this.bookingService.update(id, updateBookingDto);
+  @Get('history')
+  @ApiOperation({ summary: '预订历史' })
+  history() {
+    return this.bookingService.history();
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.bookingService.remove(id);
+  @Get('urge/:id')
+  @ApiOperation({ summary: '催办预订' })
+  urge(@Param('id') id: string) {
+    return this.bookingService.urge(id);
   }
 }

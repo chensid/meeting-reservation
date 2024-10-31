@@ -13,11 +13,6 @@ export class GetBookingsDto {
   @IsString()
   roomName?: string;
 
-  @ApiProperty({ description: '会议室位置', required: false })
-  @IsOptional()
-  @IsString()
-  roomPosition?: string;
-
   @ApiProperty({ description: '开始时间', required: false })
   @IsOptional()
   @IsInt()
@@ -29,6 +24,11 @@ export class GetBookingsDto {
   @IsInt()
   @Type(() => Number)
   endTime?: number;
+
+  @ApiProperty({ description: '预定状态', required: false })
+  @IsOptional()
+  @IsString()
+  status?: string;
 
   @ApiProperty({ description: '页码', example: 1, required: false })
   @IsOptional()

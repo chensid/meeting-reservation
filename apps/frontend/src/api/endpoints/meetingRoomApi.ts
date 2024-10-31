@@ -1,6 +1,6 @@
 import request from "@/api/clients/request";
 
-export const getMeetingRoom = async (id: number) => {
+export const getMeetingRoom = async (id: string) => {
   const response = await request({
     method: "GET",
     url: `/meeting-room/${id}`,
@@ -39,7 +39,7 @@ export const createMeetingRoom = (data: MeetingRoomParams) => {
   });
 };
 type UpdateMeetingRoomParams = {
-  id: number;
+  id: string;
   name: string;
   capacity: number;
   location: string;

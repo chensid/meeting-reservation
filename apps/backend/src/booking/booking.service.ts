@@ -3,10 +3,14 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { GetBookingsDto } from './dto/get-bookings.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class BookingService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private emailService: EmailService,
+  ) {}
 
   async create(createBookingDto: CreateBookingDto, userId: string) {
     const { roomId, startTime, endTime, note } = createBookingDto;
@@ -53,32 +57,27 @@ export class BookingService {
   }
 
   async findAll(query: GetBookingsDto) {
-    const {
-      username,
-      roomName,
-      roomPosition,
-      startTime,
-      endTime,
-      page,
-      limit,
-    } = query;
+    const { username, roomName, startTime, endTime, status, page, limit } =
+      query;
     const where = {
-      ...(username && { username: { contains: username } }),
-      ...(roomName && { roomName: { contains: roomName } }),
-      ...(roomPosition && { roomPosition: { contains: roomPosition } }),
+      ...(username && { user: { username: { contains: username } } }),
+      ...(roomName && { meetingRoom: { name: { contains: roomName } } }),
+      ...(status && { status }),
       ...(startTime && { startTime: { gte: new Date(startTime) } }),
       ...(endTime && { endTime: { lte: new Date(endTime) } }),
     };
+
     try {
-      const [bookings, total] = await this.prismaService.$transaction([
+      const [list, total] = await this.prismaService.$transaction([
         this.prismaService.booking.findMany({
           skip: (page - 1) * limit,
           take: limit,
           where,
+          include: { user: true, meetingRoom: true },
         }),
         this.prismaService.booking.count({ where }),
       ]);
-      return { bookings, total };
+      return { list, total };
     } catch {
       throw new HttpException('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -88,7 +87,7 @@ export class BookingService {
     return `This action returns a #${id} booking`;
   }
 
-  async apply(id: string) {
+  async approve(id: string) {
     try {
       await this.prismaService.booking.update({
         where: { id },
@@ -118,25 +117,33 @@ export class BookingService {
         where: { id },
         data: { status: '3' },
       });
-      return { message: '取消申请' };
+      return { message: '申请取消' };
     } catch {
       throw new HttpException('操作失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  update(id: string, updateBookingDto: UpdateBookingDto) {
-    console.log(updateBookingDto);
-    return `This action updates a #${id} booking`;
+  async history() {
+    const bookings = await this.prismaService.booking.findMany({
+      where: { status: '1' },
+    });
+    return { bookings };
   }
 
-  async remove(id: string) {
+  async urge(id: string) {
+    const admin = await this.prismaService.user.findFirstOrThrow({
+      where: { isAdmin: true },
+      select: { email: true },
+    });
     try {
-      await this.prismaService.booking.delete({
-        where: { id },
+      await this.emailService.sendEmail({
+        to: admin.email,
+        subject: '预定申请催办提醒',
+        html: `id 为 ${id} 的预定申请正在等待审批`,
       });
-      return { message: '删除成功' };
+      return { message: '催办成功' };
     } catch {
-      throw new HttpException('删除失败', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('催办失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
