@@ -19,6 +19,22 @@ export const getBookingList = async (params: BookingQuery) => {
   return response.data;
 };
 
+export type CreateBookingParams = {
+  roomId: string;
+  startTime: number;
+  endTime: number;
+  note?: string;
+}
+
+export const createBooking = async (data: CreateBookingParams) => {
+  const response = await request({
+    method: "POST",
+    url: "/booking/create",
+    data,
+  });
+  return response.data;
+};
+
 export const approveBooking = async (id: string) => {
   const response = await request({
     method: "PATCH",

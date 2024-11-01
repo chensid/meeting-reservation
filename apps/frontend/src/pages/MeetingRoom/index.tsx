@@ -15,19 +15,22 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   getMeetingRoomList,
   deleteMeetingRoom,
+  MeetingRoom,
 } from "@/api/endpoints/meetingRoomApi";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import MeetingRoomModal from "./components/MeetingRoomModal";
 import UpdateMeetingRoomModal from "./components/UpdateMeetingRoomModal";
+import CreateBookingModal from "./components/CreateBookingModal";
 
 type MeetingRoomParams = {
   name?: string;
   capacity?: number;
   equipment?: string;
 };
-const MeetingRoom: React.FC = () => {
+
+const MeetingRoomList: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [queryParams, setQueryParams] = useState<MeetingRoomParams>({});
@@ -44,7 +47,7 @@ const MeetingRoom: React.FC = () => {
     refetch();
   }, [queryParams, paginationParams, refetch]);
 
-  const columns: TableProps["columns"] = [
+  const columns: TableProps<MeetingRoom>["columns"] = [
     {
       title: "序号",
       dataIndex: "index",
@@ -80,7 +83,7 @@ const MeetingRoom: React.FC = () => {
       title: "预定状态",
       dataIndex: "isBooked",
       key: "isBooked",
-      render: (text) => (text ? "是" : "否"),
+      render: (text) => (text ? "已预定" : "可预定"),
     },
     {
       title: "创建时间",
@@ -107,11 +110,19 @@ const MeetingRoom: React.FC = () => {
           >
             <a>删除</a>
           </Popconfirm>
+          <a
+            onClick={() => {
+              setCurrentMeetingRoom(record);
+              setIsCreateModalVisible(true);
+            }}
+          >
+            创建预定
+          </a>
         </Space>
       ),
     },
   ];
-  const handleChange: TableProps["onChange"] = (pagination) => {
+  const handleChange: TableProps<MeetingRoom>["onChange"] = (pagination) => {
     setPaginationParams({
       ...paginationParams,
       page: pagination.current || 1,
@@ -135,6 +146,8 @@ const MeetingRoom: React.FC = () => {
 
   const [updateId, setUpdateId] = useState("");
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
+  const [currentMeetingRoom, setCurrentMeetingRoom] = useState<MeetingRoom>();
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const handleModify = (id: string) => {
     setUpdateId(id);
     setIsUpdateModalVisible(true);
@@ -148,7 +161,7 @@ const MeetingRoom: React.FC = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteMeetingRoomMutate(id);
   };
 
@@ -218,8 +231,16 @@ const MeetingRoom: React.FC = () => {
           setIsUpdateModalVisible(false);
         }}
       />
+      {currentMeetingRoom && (
+        <CreateBookingModal
+          meetingRoom={currentMeetingRoom}
+          visible={isCreateModalVisible}
+          onOk={() => refetch()}
+          onCancel={() => setIsCreateModalVisible(false)}
+        />
+      )}
     </>
   );
 };
 
-export default MeetingRoom;
+export default MeetingRoomList;

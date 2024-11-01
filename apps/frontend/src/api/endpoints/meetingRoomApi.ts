@@ -1,5 +1,17 @@
 import request from "@/api/clients/request";
 
+export type MeetingRoom = {
+  id: string;
+  name: string;
+  capacity: number;
+  location: string;
+  equipment?: string;
+  description?: string;
+  isBooked: boolean;
+  createTime: string;
+  updateTime: string;
+};
+
 export const getMeetingRoom = async (id: string) => {
   const response = await request({
     method: "GET",
@@ -54,7 +66,7 @@ export const updateMeetingRoom = (data: UpdateMeetingRoomParams) => {
   });
 };
 
-export const deleteMeetingRoom = (id: number) => {
+export const deleteMeetingRoom = (id: string) => {
   return request({
     method: "DELETE",
     url: `/meeting-room/${id}`,
