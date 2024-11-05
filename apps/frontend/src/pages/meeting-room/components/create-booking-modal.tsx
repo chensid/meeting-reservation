@@ -53,7 +53,7 @@ const CreateBookingModal: React.FC<CreateBookingModalProps> = (props) => {
         wrapperCol={{ span: 18 }}
         autoComplete="off"
       >
-        <Form.Item<CreateBookingParams> label="会议室" name="roomId">
+        <Form.Item<CreateBookingParams> label="会议室">
           {meetingRoom.name}
         </Form.Item>
         <Form.Item<CreateBookingParams>

@@ -41,11 +41,6 @@ export class BookingController {
     return this.bookingService.findAll(query);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.bookingService.findOne(+id);
-  }
-
   @Patch('approve/:id')
   @ApiOperation({ summary: '批准预订' })
   approve(@Param('id') id: string) {
@@ -66,8 +61,10 @@ export class BookingController {
 
   @Get('history')
   @ApiOperation({ summary: '预订历史' })
-  history() {
-    return this.bookingService.history();
+  history(@Query() query: GetBookingsDto, @Req() request: Request) {
+    const user = request['user'];
+    const userId = user.id;
+    return this.bookingService.history(query, userId);
   }
 
   @Get('urge/:id')

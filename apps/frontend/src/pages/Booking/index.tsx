@@ -33,6 +33,12 @@ const BookingList: React.FC = () => {
     refetch();
   }, [queryParams, paginationParams, refetch]);
 
+  const statusMap: Record<string, string> = {
+    "0": "待审批",
+    "1": "已通过",
+    "2": "已拒绝",
+    "3": "已取消",
+  };
   const columns: TableProps["columns"] = [
     {
       title: "序号",
@@ -42,13 +48,13 @@ const BookingList: React.FC = () => {
     },
     {
       title: "预定人",
-      dataIndex: "user",
-      key: "user",
+      dataIndex: ["user", "username"],
+      key: "username",
     },
     {
       title: "会议室名称",
-      dataIndex: "room",
-      key: "room",
+      dataIndex: ["meetingRoom", "name"],
+      key: "meetingRoom",
     },
     {
       title: "开始时间",
@@ -66,6 +72,7 @@ const BookingList: React.FC = () => {
       title: "审批状态",
       dataIndex: "status",
       key: "status",
+      render: (status) => statusMap[status],
     },
     {
       title: "备注",

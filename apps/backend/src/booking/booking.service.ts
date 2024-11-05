@@ -83,10 +83,6 @@ export class BookingService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} booking`;
-  }
-
   async approve(id: string) {
     try {
       await this.prismaService.booking.update({
@@ -123,11 +119,32 @@ export class BookingService {
     }
   }
 
-  async history() {
-    const bookings = await this.prismaService.booking.findMany({
-      where: { status: '1' },
-    });
-    return { bookings };
+  async history(query: GetBookingsDto, userId: string) {
+    const { username, roomName, startTime, endTime, status, page, limit } =
+      query;
+    const where = {
+      ...(userId && { user: { id: userId } }),
+      ...(username && { user: { username: { contains: username } } }),
+      ...(roomName && { meetingRoom: { name: { contains: roomName } } }),
+      ...(status && { status }),
+      ...(startTime && { startTime: { gte: new Date(startTime) } }),
+      ...(endTime && { endTime: { lte: new Date(endTime) } }),
+    };
+
+    try {
+      const [list, total] = await this.prismaService.$transaction([
+        this.prismaService.booking.findMany({
+          skip: (page - 1) * limit,
+          take: limit,
+          where,
+          include: { user: true, meetingRoom: true },
+        }),
+        this.prismaService.booking.count({ where }),
+      ]);
+      return { list, total };
+    } catch {
+      throw new HttpException('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async urge(id: string) {

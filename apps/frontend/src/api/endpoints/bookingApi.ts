@@ -24,7 +24,7 @@ export type CreateBookingParams = {
   startTime: number;
   endTime: number;
   note?: string;
-}
+};
 
 export const createBooking = async (data: CreateBookingParams) => {
   const response = await request({
@@ -59,10 +59,11 @@ export const cancelBooking = async (id: string) => {
   return response.data;
 };
 
-export const historyBooking = async () => {
+export const getBookingHistory = async (params: BookingQuery) => {
   const response = await request({
     method: "GET",
     url: "/booking/history",
+    params,
   });
   return response.data;
 };
