@@ -20,9 +20,9 @@ import {
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import MeetingRoomModal from "./components/MeetingRoomModal";
-import UpdateMeetingRoomModal from "./components/UpdateMeetingRoomModal";
-import CreateBookingModal from "./components/CreateBookingModal";
+import MeetingRoomModal from "./components/meeting-room-modal";
+import UpdateMeetingRoomModal from "./components/update-meeting-room-modal";
+import CreateBookingModal from "./components/create-booking-modal";
 
 type MeetingRoomParams = {
   name?: string;

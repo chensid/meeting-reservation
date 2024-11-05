@@ -1,12 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
-import BasicLayout from "@/layouts/BasicLayout";
-import Home from "@/pages/Home";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
-import ForgotPassword from "@/pages/ForgotPassword";
-import UserList from "@/pages/User";
-import MeetingRoomList from "@/pages/MeetingRoom";
-import BookingList from "@/pages/Booking";
+import BasicLayout from "@/layouts/basic-layout";
+import Home from "@/pages/home";
+import Login from "@/pages/login";
+import Register from "@/pages/register";
+import ForgotPassword from "@/pages/forgot-password";
+import UserList from "@/pages/user";
+import MeetingRoomList from "@/pages/meeting-room";
+import BookingList from "@/pages/booking";
+import BookingHistory from "@/pages/booking/booking-history";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,11 @@ const router = createBrowserRouter([
       {
         path: "/booking",
         element: <BookingList />,
-      }
+      },
+      {
+        path: "/booking-history",
+        element: <BookingHistory />,
+      },
     ],
   },
   {

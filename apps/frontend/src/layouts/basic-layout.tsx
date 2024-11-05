@@ -26,6 +26,11 @@ const BasicLayout: React.FC = () => {
       key: "4",
       label: "Booking",
       onClick: () => navigate("/booking"),
+    },
+    {
+      key: "5",
+      label: "Booking History",
+      onClick: () => navigate("/booking-history"),
     }
   ];
   return (
