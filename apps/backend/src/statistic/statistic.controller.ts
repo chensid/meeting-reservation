@@ -1,7 +1,14 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { StatisticService } from './statistic.service';
-import { ApiOperation, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('statistic')
+@ApiBearerAuth()
 @Controller('statistic')
 export class StatisticController {
   constructor(private readonly statisticService: StatisticService) {}
