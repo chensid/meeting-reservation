@@ -1,45 +1,50 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { StatisticService } from './statistic.service';
-import { CreateStatisticDto } from './dto/create-statistic.dto';
-import { UpdateStatisticDto } from './dto/update-statistic.dto';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 
 @Controller('statistic')
 export class StatisticController {
   constructor(private readonly statisticService: StatisticService) {}
 
-  @Post()
-  create(@Body() createStatisticDto: CreateStatisticDto) {
-    return this.statisticService.create(createStatisticDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.statisticService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.statisticService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateStatisticDto: UpdateStatisticDto,
+  @Get('userBookingCount')
+  @ApiOperation({ summary: '统计用户预订次数' })
+  @ApiQuery({
+    name: 'startTime',
+    required: true,
+    type: Number,
+    description: '开始时间',
+  })
+  @ApiQuery({
+    name: 'endTime',
+    required: true,
+    type: Number,
+    description: '结束时间',
+  })
+  async userBookingCount(
+    @Query('startTime') startTime: number,
+    @Query('endTime') endTime: number,
   ) {
-    return this.statisticService.update(+id, updateStatisticDto);
+    return this.statisticService.userBookingCount(startTime, endTime);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.statisticService.remove(+id);
+  @Get('meetingRoomBookingCount')
+  @ApiOperation({ summary: '统计会议室预订次数' })
+  @ApiQuery({
+    name: 'startTime',
+    required: true,
+    type: Number,
+    description: '开始时间',
+  })
+  @ApiQuery({
+    name: 'endTime',
+    required: true,
+    type: Number,
+    description: '结束时间',
+  })
+  async meetingRoomBookingCount(
+    @Query('startTime') startTime: number,
+    @Query('endTime') endTime: number,
+  ) {
+    return this.statisticService.meetingRoomBookingCount(startTime, endTime);
   }
 }

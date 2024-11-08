@@ -8,6 +8,7 @@ import UserList from "@/pages/user";
 import MeetingRoomList from "@/pages/meeting-room";
 import BookingList from "@/pages/booking";
 import BookingHistory from "@/pages/booking/booking-history";
+import StatisticPage from "@/pages/statistic";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/booking-history",
         element: <BookingHistory />,
+      },
+      {
+        path: "/statistic",
+        element: <StatisticPage />,
       },
     ],
   },

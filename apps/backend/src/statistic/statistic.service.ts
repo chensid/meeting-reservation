@@ -1,26 +1,71 @@
-import { Injectable } from '@nestjs/common';
-import { CreateStatisticDto } from './dto/create-statistic.dto';
-import { UpdateStatisticDto } from './dto/update-statistic.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class StatisticService {
-  create(createStatisticDto: CreateStatisticDto) {
-    return 'This action adds a new statistic';
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async userBookingCount(startTime: number, endTime: number) {
+    try {
+      const userBookingStats = await this.prismaService.user
+        .findMany({
+          select: {
+            id: true,
+            username: true,
+            _count: {
+              select: {
+                bookings: {
+                  where: {
+                    startTime: { gte: new Date(startTime) },
+                    endTime: { lte: new Date(endTime) },
+                  },
+                },
+              },
+            },
+          },
+        })
+        .then((users) =>
+          users.map((user) => ({
+            id: user.id,
+            username: user.username,
+            bookingCount: user._count.bookings,
+          })),
+        );
+      return { userBookingStats };
+    } catch {
+      throw new HttpException('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  findAll() {
-    return `This action returns all statistic`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} statistic`;
-  }
-
-  update(id: number, updateStatisticDto: UpdateStatisticDto) {
-    return `This action updates a #${id} statistic`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} statistic`;
+  async meetingRoomBookingCount(startTime: number, endTime: number) {
+    try {
+      const meetingRoomBookingStats = await this.prismaService.meetingRoom
+        .findMany({
+          select: {
+            id: true,
+            name: true,
+            _count: {
+              select: {
+                bookings: {
+                  where: {
+                    startTime: { gte: new Date(startTime) },
+                    endTime: { lte: new Date(endTime) },
+                  },
+                },
+              },
+            },
+          },
+        })
+        .then((meetingRooms) =>
+          meetingRooms.map((meetingRoom) => ({
+            id: meetingRoom.id,
+            name: meetingRoom.name,
+            bookingCount: meetingRoom._count.bookings,
+          })),
+        );
+      return { meetingRoomBookingStats };
+    } catch {
+      throw new HttpException('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

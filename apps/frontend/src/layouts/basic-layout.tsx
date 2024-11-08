@@ -5,7 +5,7 @@ const { Header, Sider, Content, Footer } = Layout;
 
 const BasicLayout: React.FC = () => {
   const navigate = useNavigate();
-  
+
   const menuItems: MenuProps["items"] = [
     {
       key: "1",
@@ -31,7 +31,12 @@ const BasicLayout: React.FC = () => {
       key: "5",
       label: "Booking History",
       onClick: () => navigate("/booking-history"),
-    }
+    },
+    {
+      key: "6",
+      label: "Statistic",
+      onClick: () => navigate("/statistic"),
+    },
   ];
   return (
     <Layout className="min-h-screen">
