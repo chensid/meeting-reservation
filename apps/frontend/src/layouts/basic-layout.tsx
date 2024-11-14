@@ -1,4 +1,5 @@
-import { Layout, Menu, MenuProps } from "antd";
+import { LogoutOutlined } from "@ant-design/icons";
+import { Avatar, Dropdown, Layout, Menu, MenuProps } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -38,9 +39,34 @@ const BasicLayout: React.FC = () => {
       onClick: () => navigate("/statistic"),
     },
   ];
+
+  const items: MenuProps["items"] = [
+    {
+      key: "logout",
+      label: "退出登录",
+      icon: <LogoutOutlined />,
+      onClick: () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        navigate("/login");
+      },
+    },
+  ];
   return (
     <Layout className="min-h-screen">
-      <Header className="bg-white shadow-sm">header</Header>
+      <Header className="border-b shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>header</div>
+          <div>
+            <Dropdown menu={{ items }}>
+              <div className="flex items-center gap-2 cursor-pointer h-[44px] text-[#00000073] rounded-[6px] px-2 hover:bg-[#00000008]">
+                <Avatar size={26} gap={8} />
+                <span>Username</span>
+              </div>
+            </Dropdown>
+          </div>
+        </div>
+      </Header>
       <Layout>
         <Sider collapsible theme="light">
           <Menu
