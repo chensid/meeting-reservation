@@ -1,29 +1,32 @@
 import request from "@/api/clients/request";
 
-export const login = (data: { username: string; password: string }) => {
-  return request({
+export const login = async (data: { username: string; password: string }) => {
+  const response = await request({
     method: "POST",
     url: "/auth/login",
     data,
   });
+  return response.data;
 };
 
-export const getCaptcha = (params: { address: string }) => {
-  return request({
+export const getCaptcha = async (params: { address: string }) => {
+  const response = await request({
     method: "GET",
     url: "/auth/captcha",
     params,
   });
+  return response.data;
 };
 
-export const forgotPassword = (data: {
+export const forgotPassword = async (data: {
   email: string;
   captcha: string;
   password: string;
 }) => {
-  return request({
+  const response = await request({
     method: "POST",
     url: "/auth/forgot-password",
     data,
   });
+  return response.data;
 };

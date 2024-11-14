@@ -7,12 +7,13 @@ type User = {
   email: string;
   captcha: string;
 };
-export const register = (data: User) => {
-  return request({
+export const register = async (data: User) => {
+  const response = await request({
     method: "POST",
     url: "/user/register",
     data,
   });
+  return response.data;
 };
 
 type UserQuery = {
@@ -27,9 +28,15 @@ export const getUserList = async (params: UserQuery) => {
   return response.data;
 };
 
-export const freezeUser = (id: number) => {
-  return request({
+export const getLoginUser = async () => {
+  const response = await request({ method: "GET", url: "/user/current" });
+  return response.data;
+};
+
+export const freezeUser = async (id: number) => {
+  const response = await request({
     method: "PATCH",
     url: `/user/${id}/freeze`,
   });
+  return response.data;
 };

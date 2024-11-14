@@ -71,11 +71,15 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    const user = await this.prismaService.user.findUnique({ where: { id } });
-    if (!user) {
-      throw new HttpException('用户不存在', HttpStatus.NOT_FOUND);
+    try {
+      const user = await this.prismaService.user.findUnique({ where: { id } });
+      if (!user) {
+        throw new HttpException('用户不存在', HttpStatus.NOT_FOUND);
+      }
+      return { user };
+    } catch {
+      throw new HttpException('查询失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

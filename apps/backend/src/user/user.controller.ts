@@ -43,6 +43,14 @@ export class UserController {
     return this.userService.findAll(query);
   }
 
+  @ApiOperation({ summary: '获取登录用户信息' })
+  @Get('current')
+  findLoginUser(@Req() request: Request) {
+    const user = request['user'];
+    const id = user.id;
+    return this.userService.findOne(id);
+  }
+
   @ApiOperation({ summary: '获取单个用户' })
   @Get(':id')
   @ApiOkResponse({ type: UserEntity })

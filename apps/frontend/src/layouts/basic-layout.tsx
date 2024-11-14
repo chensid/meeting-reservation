@@ -1,3 +1,4 @@
+import useUserStore from "@/store/useUserStore";
 import { LogoutOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Layout, Menu, MenuProps } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -5,6 +6,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 const { Header, Sider, Content, Footer } = Layout;
 
 const BasicLayout: React.FC = () => {
+  const { user, clearUser } = useUserStore();
   const navigate = useNavigate();
 
   const menuItems: MenuProps["items"] = [
@@ -48,6 +50,7 @@ const BasicLayout: React.FC = () => {
       onClick: () => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        clearUser();
         navigate("/login");
       },
     },
@@ -60,8 +63,8 @@ const BasicLayout: React.FC = () => {
           <div>
             <Dropdown menu={{ items }}>
               <div className="flex items-center gap-2 cursor-pointer h-[44px] text-[#00000073] rounded-[6px] px-2 hover:bg-[#00000008]">
-                <Avatar size={26} gap={8} />
-                <span>Username</span>
+                <Avatar size={26} gap={8} src={user?.headPic} />
+                <span>{user?.username}</span>
               </div>
             </Dropdown>
           </div>

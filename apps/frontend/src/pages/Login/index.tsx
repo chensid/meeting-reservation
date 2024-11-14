@@ -3,6 +3,8 @@ import { Button, Form, Input } from "antd";
 import { login } from "@/api/endpoints/authApi";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { getLoginUser } from "@/api/endpoints/userApi";
+import useUserStore from "@/store/useUserStore";
 
 type LoginForm = {
   username: string;
@@ -10,13 +12,23 @@ type LoginForm = {
 };
 
 const Login: React.FC = () => {
+  const { setUser} = useUserStore();
   const navigate = useNavigate();
+  // 获取登录用户
+  const { mutate: fetchLoginUser } = useMutation({
+    mutationFn: getLoginUser,
+    onSuccess: (res) => {
+      const { user } = res;
+      setUser(user);
+    },
+  });
   const { mutate, isPending } = useMutation({
     mutationFn: (data: LoginForm) => login(data),
     onSuccess: (res) => {
-      const { accessToken, refreshToken } = res.data;
+      const { accessToken, refreshToken } = res;
       localStorage.setItem("refreshToken", refreshToken);
       localStorage.setItem("accessToken", accessToken);
+      fetchLoginUser();
       navigate("/");
     },
   });
