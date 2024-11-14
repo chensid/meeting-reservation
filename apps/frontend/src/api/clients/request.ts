@@ -40,6 +40,14 @@ request.interceptors.response.use(
   },
   (error: AxiosError<ApiError>) => {
     if (error.response) {
+      const { status } = error.response;
+      if (status === 401) {
+        message.error("登录过期，请重新登录");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/login";
+      }
+
       const { message: msg } = error.response.data;
       message.error(msg || "系统异常");
       return Promise.reject(error);
