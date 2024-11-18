@@ -29,6 +29,7 @@ export class BookingService {
     const overlappingMeetings = await this.prismaService.booking.findMany({
       where: {
         roomId,
+        status: { not: '3' },
         OR: [
           {
             startTime: { lt: new Date(endTime) },

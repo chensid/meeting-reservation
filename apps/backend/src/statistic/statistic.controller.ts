@@ -6,6 +6,8 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserBookingCountDto } from './dto/user-booking-count.dto';
+import { MeetingRoomBookingCountDto } from './dto/meeting-room-booking-count.dto';
 
 @ApiTags('statistic')
 @ApiBearerAuth()
@@ -15,43 +17,15 @@ export class StatisticController {
 
   @Get('userBookingCount')
   @ApiOperation({ summary: '统计用户预订次数' })
-  @ApiQuery({
-    name: 'startTime',
-    required: true,
-    type: Number,
-    description: '开始时间',
-  })
-  @ApiQuery({
-    name: 'endTime',
-    required: true,
-    type: Number,
-    description: '结束时间',
-  })
-  async userBookingCount(
-    @Query('startTime') startTime: number,
-    @Query('endTime') endTime: number,
-  ) {
+  async userBookingCount(@Query() query: UserBookingCountDto) {
+    const { startTime, endTime } = query;
     return this.statisticService.userBookingCount(startTime, endTime);
   }
 
   @Get('meetingRoomBookingCount')
   @ApiOperation({ summary: '统计会议室预订次数' })
-  @ApiQuery({
-    name: 'startTime',
-    required: true,
-    type: Number,
-    description: '开始时间',
-  })
-  @ApiQuery({
-    name: 'endTime',
-    required: true,
-    type: Number,
-    description: '结束时间',
-  })
-  async meetingRoomBookingCount(
-    @Query('startTime') startTime: number,
-    @Query('endTime') endTime: number,
-  ) {
+  async meetingRoomBookingCount(@Query() query: MeetingRoomBookingCountDto) {
+    const { startTime, endTime } = query;
     return this.statisticService.meetingRoomBookingCount(startTime, endTime);
   }
 }
