@@ -1,21 +1,28 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-interface UserStore {
-  user: {
-    id: string;
-    username: string;
-    nickname: string;
-    email: string;
-    headPic?: string;
-    phoneNumber?: string;
-  } | null;
-  setUser: (user: UserStore["user"]) => void;
+interface IUser {
+  id: string;
+  username: string;
+  nickname: string;
+  email: string;
+  headPic?: string;
+  phoneNumber?: string;
+}
+interface IUserStore {
+  user: IUser | null;
+  setUser: (user: IUser) => void;
   clearUser: () => void;
 }
-const useUserStore = create<UserStore>((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-  clearUser: () => set({ user: null }),
-}));
+const useUserStore = create<IUserStore>()(
+  persist(
+    (set) => ({
+      user: null,
+      setUser: (user) => set({ user }),
+      clearUser: () => set({ user: null }),
+    }),
+    { name: "user-storage" }
+  )
+);
 
 export default useUserStore;
