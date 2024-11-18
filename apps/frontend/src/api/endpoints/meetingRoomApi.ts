@@ -43,12 +43,13 @@ type MeetingRoomParams = {
   equipment?: string;
   description?: string;
 };
-export const createMeetingRoom = (data: MeetingRoomParams) => {
-  return request({
+export const createMeetingRoom = async (data: MeetingRoomParams) => {
+  const response = await request({
     method: "POST",
     url: "/meeting-room/create",
     data,
   });
+  return response.data;
 };
 type UpdateMeetingRoomParams = {
   id: string;
@@ -58,17 +59,19 @@ type UpdateMeetingRoomParams = {
   equipment?: string;
   description?: string;
 };
-export const updateMeetingRoom = (data: UpdateMeetingRoomParams) => {
-  return request({
+export const updateMeetingRoom = async (data: UpdateMeetingRoomParams) => {
+  const response = await request({
     method: "PATCH",
     url: "/meeting-room/update",
     data,
   });
+  return response.data;
 };
 
-export const deleteMeetingRoom = (id: string) => {
-  return request({
+export const deleteMeetingRoom = async (id: string) => {
+  const response = await request({
     method: "DELETE",
     url: `/meeting-room/${id}`,
   });
+  return response.data;
 };
