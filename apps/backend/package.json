@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@nestjs/cache-manager": "^2.3.0",
-    "@nestjs/cli": "^10.4.7",
+    "@nestjs/cli": "^10.4.8",
     "@nestjs/config": "^3.3.0",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/schematics": "^10.2.3",
@@ -43,7 +43,7 @@
     "@nestjs/testing": "^10.4.8",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.9.1",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
